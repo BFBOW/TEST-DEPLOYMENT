@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Open+Sans:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Playfair Display", serif;
+  --font-paragraph: "Montserrat", sans-serif;
+
+  /* Option 1: Editorial & Refined (Kept for reference if needed) */
+  --font-editorial-heading: "Cormorant Garamond", serif;
+  --font-editorial-body: "Inter", sans-serif;
+
+  /* Option 2: Bold & Striking (Now Default) */
+  --font-bold-heading: "Playfair Display", serif;
+  --font-bold-body: "Montserrat", sans-serif;
+
+  /* Option 3: Modern & Approachable */
+  --font-modern: "Outfit", sans-serif;
+
+  --color-background: #2F3E2F;
+  --color-foreground: #FFFFFF;
+  
+  --color-primary: #2F3E2F;
+  --color-primary-foreground: #C9D6B9;
+  
+  --color-secondary: #8A9A5B;
+  --color-secondary-foreground: #FFFFFF;
+  
+  --color-destructive: #DF3131;
+  --color-destructive-foreground: #FFFFFF;
+  
+  --color-buttonbackground: #8A9A5B;
+  --color-buttonforeground: #FFFFFF;
+  
+  --color-textlight: #C9D6B9;
+  --color-textbody: #FFFFFF;
+  
+  --color-bordersubtle: #5A6A4A;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-paragraph;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
