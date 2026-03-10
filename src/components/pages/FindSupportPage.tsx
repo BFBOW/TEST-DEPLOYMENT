@@ -56,6 +56,7 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 
 export default function FindSupportPage() {
   const [status, setStatus] = useState('idle'); 
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -103,15 +104,22 @@ export default function FindSupportPage() {
     setStatus('loading');
 
     try {
+      setErrorMessage('');
       const response = await fetch('/.netlify/functions/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) setStatus('success');
-      else setStatus('error');
-    } catch (err) {
+      if (response.ok) {
+        setStatus('success');
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || errorData.error || 'Failed to submit form. Please check your API key and list ID.');
+        setStatus('error');
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'An unexpected error occurred.');
       setStatus('error');
     }
   };
@@ -517,6 +525,11 @@ export default function FindSupportPage() {
                     <>Submit My Form <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" /></>
                   )}
                 </Button>
+                {status === 'error' && (
+                  <p className="text-destructive text-center text-sm font-bold mt-4">
+                    {errorMessage}
+                  </p>
+                )}
               </form>
             </div>
           )}

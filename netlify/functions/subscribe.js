@@ -29,7 +29,7 @@ exports.handler = async (event) => {
         HYGIENE_PREFS: data.hygienePreferences,
         PET_DETAILS: petSummary || "None"
       },
-      listIds: [2],
+      listIds: [3],
       updateEnabled: true
     };
 
