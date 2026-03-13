@@ -14,8 +14,7 @@ import {
   MapPin,
   Info,
   Dog,
-  UserPlus,
-  Loader2
+  UserPlus
 } from 'lucide-react';
 import { Button } from '../ui/button';
 
@@ -55,74 +54,35 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 };
 
 export default function FindSupportPage() {
-  const [status, setStatus] = useState('idle'); 
-  const [errorMessage, setErrorMessage] = useState('');
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    ageRanges: [] as string[],
-    email: '',
-    phone: '',
-    postalCode: '',
-    newsSubscribe: false,
-    pickingUpForOthers: '',
-    householdSize: 1,
-    dietaryRestrictions: [] as string[],
-    additionalPreferences: '',
-    hygieneProducts: [] as string[],
-    hygienePreferences: '',
-    pets: { 'Dog': 0, 'Cat': 0, 'Small Animal (Rabbit, Hamster, etc)': 0 } as Record<string, number>
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleToggleList = (category: 'ageRanges' | 'dietaryRestrictions' | 'hygieneProducts', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [category]: prev[category].includes(value)
-        ? (prev[category] as string[]).filter(item => item !== value)
-        : [...(prev[category] as string[]), value]
-    }));
-  };
-
-  const handlePetQty = (pet: string, qty: string | number) => {
-    setFormData(prev => ({
-      ...prev,
-      pets: { ...prev.pets, [pet]: parseInt(qty as string) || 0 }
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('loading');
-
-    try {
-      setErrorMessage('');
-      const response = await fetch('/.netlify/functions/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setStatus('success');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || errorData.error || 'Failed to submit form. Please check your API key and list ID.');
-        setStatus('error');
+  React.useEffect(() => {
+    // Brevo Configuration
+    (window as any).REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+    (window as any).LOCALE = 'en';
+    (window as any).EMAIL_INVALID_MESSAGE = (window as any).SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    (window as any).REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
+    (window as any).GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    (window as any).INVALID_NUMBER = "The information provided is invalid. Please review the field format and try again.";
+    (window as any).translation = {
+      common: {
+        selectedList: '{quantity} list selected',
+        selectedLists: '{quantity} lists selected',
+        selectedOption: '{quantity} selected',
+        selectedOptions: '{quantity} selected',
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || 'An unexpected error occurred.');
-      setStatus('error');
-    }
-  };
+    };
+
+    const script = document.createElement('script');
+    script.src = "https://sibforms.com/forms/end-form/build/main.js";
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      const existingScript = document.querySelector('script[src="https://sibforms.com/forms/end-form/build/main.js"]');
+      if (existingScript) {
+        document.body.removeChild(existingScript);
+      }
+    };
+  }, []);
 
   const faqs = [
     {
@@ -302,237 +262,226 @@ export default function FindSupportPage() {
       {/* Membership Form */}
       <section id="support-form" className="py-24 bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {status === 'success' ? (
-            <div className="py-24 text-center bg-background min-h-[60vh] flex flex-col justify-center items-center">
-              <CheckCircle2 className="text-secondary mb-6" size={80} />
-              <h2 className="text-4xl font-modern mb-4">Application Received!</h2>
-              <p className="text-textbody/60 max-w-md mx-auto px-4">
-                Thank you. Your information has been securely sent to the team. We will reach out shortly.
+          <div className="bg-secondary/5 border border-secondary/10 rounded-3xl p-8 md:p-16 shadow-xl">
+            <div className="text-center mb-16">
+              <UserPlus className="mx-auto mb-6 text-secondary" size={64} />
+              <h2 className="text-4xl font-heading mb-4 text-foreground">Signing Up</h2>
+              <p className="text-textbody/60">
+                Please fill out your membership application form to get started. Once submitted, a member of our Belleville Food Bank On Wheels team will review your information and reach out shortly!
               </p>
-              <button 
-                onClick={() => setStatus('idle')} 
-                className="mt-8 text-secondary font-bold uppercase tracking-widest text-sm hover:underline"
-              >
-                Submit another response
-              </button>
             </div>
-          ) : (
-            <div className="bg-secondary/5 border border-secondary/10 rounded-3xl p-8 md:p-16 shadow-xl">
-              <div className="text-center mb-16">
-                <UserPlus className="mx-auto mb-6 text-secondary" size={64} />
-                <h2 className="text-4xl font-modern mb-4 text-foreground">Signing Up</h2>
-                <p className="text-textbody/60">
-                  Please fill out your membership application form to get started. Once submitted, a member of our Belleville Food Bank On Wheels team will review your information and reach out shortly!
-                </p>
+
+            <div id="error-message" className="sib-form-message-panel hidden mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive text-destructive text-sm">
+              <div className="flex items-center gap-3">
+                <Info size={20} />
+                <span>Your submission could not be saved. Please try again.</span>
+              </div>
+            </div>
+
+            <div id="success-message" className="sib-form-message-panel hidden mb-6 p-4 rounded-lg bg-secondary/10 border border-secondary text-secondary text-sm">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={20} />
+                <span>Your submission has been successful.</span>
+              </div>
+            </div>
+
+            <form 
+              id="sib-form" 
+              method="POST" 
+              action="https://c7bb5e5e.sibforms.com/serve/MUIFACM91r-wF92NVX4-ZRCXCaAvB1RLge7kGqHQDFhD2_hZORtudWorSIHFAVkPLeRhrRTqLyzB87rPmM-kUDZOzz-NANoBD1ATkLJfCQBh2S_4gh7lv6WjwwYs4qa-Mf2V0x68KvY87Ul9diQub3siO3F_r0E-HdplHTlrSUHMByueYbC6Ha4Bu2MzawS4rmgHeLJbsMNJzUfBVA==" 
+              data-type="subscription"
+              className="space-y-10"
+            >
+              {/* Name Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Name</h3>
+                <p className="text-xs text-textbody/40 italic">Please provide your first and last name</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">First Name <span className="text-destructive">*</span></label>
+                    <input required type="text" id="FIRSTNAME" name="FIRSTNAME" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">Last Name <span className="text-destructive">*</span></label>
+                    <input required type="text" id="LASTNAME" name="LASTNAME" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Date of Birth <span className="text-destructive">*</span></label>
+                  <input required type="date" id="DOB" name="DOB" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground [color-scheme:dark]" />
+                </div>
               </div>
 
-              <form className="space-y-10" onSubmit={handleSubmit}>
-                {/* Name Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Name</h3>
+              {/* Age Range Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Age Range</h3>
+                <p className="text-xs text-textbody/60 leading-relaxed">
+                  Please select the age range(s) applicable to you. This helps us and our distribution partners tailor support and programming to various age groups in our community.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {['0-18', '19-30', '31-50', '51-64', '65+'].map((range) => (
+                    <div key={range} className="flex items-center gap-2">
+                      <input type="checkbox" id={`age-${range}`} className="accent-secondary" />
+                      <label htmlFor={`age-${range}`} className="text-xs text-textbody/60">{range}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">Email <span className="text-destructive">*</span></label>
+                    <input required type="email" id="EMAIL" name="EMAIL" placeholder="jane.doe@email.com" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                    <div className="flex items-center gap-2 mt-2">
+                      <input type="checkbox" id="news" className="accent-secondary" />
+                      <label htmlFor="news" className="text-xs text-textbody/60">Sign up for news and updates</label>
+                    </div>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">First Name <span className="text-destructive">*</span></label>
-                      <input required name="firstName" value={formData.firstName} onChange={handleInputChange} type="text" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">Phone Number</label>
+                      <div className="flex gap-2">
+                        <select name="SMS__COUNTRY_CODE" className="bg-white/5 border border-secondary/10 rounded-lg px-2 py-3 focus:border-secondary outline-none transition-colors text-foreground text-xs">
+                          <option value="+1">+1 CA/US</option>
+                          <option value="+44">+44 UK</option>
+                          {/* Add more as needed or keep it simple */}
+                        </select>
+                        <input type="tel" id="SMS" name="SMS" className="flex-grow bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">Last Name <span className="text-destructive">*</span></label>
-                      <input required name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
+                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">Postal Code <span className="text-destructive">*</span></label>
+                      <input required type="text" id="POSTAL_CODE" name="POSTAL_CODE" placeholder="L1E1V8" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors uppercase text-foreground" />
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Age Range Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Age Range</h3>
-                  <p className="text-xs text-textbody/60 leading-relaxed">
-                    Please select the age range(s) applicable to you. This helps us and our distribution partners tailor support and programming to various age groups in our community.
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {['0-18', '19-30', '31-50', '51-64', '65+'].map((range) => (
-                      <div key={range} className="flex items-center gap-2">
-                        <input 
-                          type="checkbox" 
-                          id={`age-${range}`} 
-                          className="accent-secondary" 
-                          checked={formData.ageRanges.includes(range)}
-                          onChange={() => handleToggleList('ageRanges', range)}
-                        />
-                        <label htmlFor={`age-${range}`} className="text-xs text-textbody/60">{range}</label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Contact Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Contact Information</h3>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">Email <span className="text-destructive">*</span></label>
-                      <input required name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="jane.doe@email.com" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
-                      <div className="flex items-center gap-2 mt-2">
-                        <input name="newsSubscribe" checked={formData.newsSubscribe} onChange={handleInputChange} type="checkbox" id="news" className="accent-secondary" />
-                        <label htmlFor="news" className="text-xs text-textbody/60">Sign up for news and updates</label>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-widest font-bold text-foreground">Phone Number</label>
-                        <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-widest font-bold text-foreground">Postal Code <span className="text-destructive">*</span></label>
-                        <input required name="postalCode" value={formData.postalCode} onChange={handleInputChange} type="text" placeholder="L1E1V8" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors uppercase text-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Household Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Household Details</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">Picking up for others?</label>
-                      <select name="pickingUpForOthers" value={formData.pickingUpForOthers} onChange={handleInputChange} className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors appearance-none text-foreground">
-                        <option value="">Select an option</option>
-                        <option value="No, just my household">No, just my household</option>
-                        <option value="Yes, another person/household">Yes, another person/household</option>
-                      </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-foreground">People in household</label>
-                      <input name="householdSize" value={formData.householdSize} onChange={handleInputChange} type="number" min="1" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dietary Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Dietary Restrictions</h3>
-                  <p className="text-xs text-textbody/60 leading-relaxed">
-                    Please select any dietary restrictions or statements most applicable to your household.
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {['Gluten-Free', 'Diabetic-Friendly', 'Nut-Free', 'Vegan', 'Vegetarian', 'Halal', 'Hypertension', 'Celiac', 'No Restrictions'].map((diet) => (
-                      <div key={diet} className="flex items-center gap-2">
-                        <input 
-                          type="checkbox" 
-                          id={diet} 
-                          className="accent-secondary" 
-                          checked={formData.dietaryRestrictions.includes(diet)}
-                          onChange={() => handleToggleList('dietaryRestrictions', diet)}
-                        />
-                        <label htmlFor={diet} className="text-xs text-textbody/60">{diet}</label>
-                      </div>
-                    ))}
+              {/* Household Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Household Details</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">Picking up for others?</label>
+                    <select id="PICKUP_OTHERS" name="PICKUP_OTHERS" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors appearance-none text-foreground">
+                      <option value="">Select an option</option>
+                      <option value="No, just my household">No, just my household</option>
+                      <option value="Yes, another person/household">Yes, another person/household</option>
+                    </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">Additional Preferences</label>
-                    <textarea name="additionalPreferences" value={formData.additionalPreferences} onChange={handleInputChange} rows={3} className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"></textarea>
+                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">People in household</label>
+                    <input type="number" id="HOUSEHOLD_COUNT" name="HOUSEHOLD_COUNT" min="1" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
                   </div>
                 </div>
+              </div>
 
-                {/* Hygiene Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Nurturing, Hygiene & Clothing</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {['Soap/Body Wash', 'Shampoo', 'Toothpaste', 'Deodorant', 'Feminine Hygiene', 'Diapers', 'Baby Wipes', 'Clothing Items'].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <input 
-                          type="checkbox" 
-                          id={item} 
-                          className="accent-secondary" 
-                          checked={formData.hygieneProducts.includes(item)}
-                          onChange={() => handleToggleList('hygieneProducts', item)}
-                        />
-                        <label htmlFor={item} className="text-xs text-textbody/60">{item}</label>
+              {/* Dietary Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Dietary Restrictions</h3>
+                <p className="text-xs text-textbody/60 leading-relaxed">
+                  Please select any dietary restrictions or statements most applicable to your household.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {['Gluten-Free', 'Diabetic-Friendly', 'Nut-Free', 'Vegan', 'Vegetarian', 'Halal', 'Hypertension', 'Celiac', 'No Restrictions'].map((diet) => (
+                    <div key={diet} className="flex items-center gap-2">
+                      <input type="checkbox" id={diet} className="accent-secondary" />
+                      <label htmlFor={diet} className="text-xs text-textbody/60">{diet}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Additional Preferences</label>
+                  <textarea id="DIETARY_NOTES" name="DIETARY_NOTES" rows={3} className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"></textarea>
+                </div>
+              </div>
+
+              {/* Hygiene Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Nurturing, Hygiene & Clothing</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {['Soap/Body Wash', 'Shampoo', 'Toothpaste', 'Deodorant', 'Feminine Hygiene', 'Diapers', 'Baby Wipes', 'Clothing Items'].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <input type="checkbox" id={item} className="accent-secondary" />
+                      <label htmlFor={item} className="text-xs text-textbody/60">{item}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Additional Preferences (Hygiene/Clothing)</label>
+                  <textarea id="HYGIENE_NEEDS" name="HYGIENE_NEEDS" rows={2} placeholder="Sizes, specific needs, etc." className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"></textarea>
+                </div>
+              </div>
+
+              {/* Pets Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2 flex items-center gap-2">
+                  <Dog size={16} /> Pets and Animals
+                </h3>
+                <p className="text-xs text-textbody/60 leading-relaxed">
+                  Please select the pet you have and the amount so we can provide supplies when on hand.
+                </p>
+                <div className="space-y-4">
+                  {['Dog', 'Cat', 'Small Animal (Rabbit, Hamster, etc)'].map((pet) => (
+                    <div key={pet} className="flex items-center justify-between gap-4 p-4 bg-white/5 border border-secondary/10 rounded-xl">
+                      <div className="flex items-center gap-2">
+                        <input type="checkbox" id={pet} className="accent-secondary" />
+                        <label htmlFor={pet} className="text-sm text-foreground">{pet}</label>
                       </div>
-                    ))}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-widest font-bold text-foreground">Additional Preferences (Hygiene/Clothing)</label>
-                    <textarea 
-                      name="hygienePreferences" 
-                      value={formData.hygienePreferences} 
-                      onChange={handleInputChange} 
-                      rows={2} 
-                      placeholder="Sizes, specific needs, etc." 
-                      className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"
-                    ></textarea>
-                  </div>
+                      <input type="number" placeholder="Qty" className="w-20 bg-white/10 border border-secondary/10 rounded px-3 py-1 text-sm outline-none focus:border-secondary text-foreground" />
+                    </div>
+                  ))}
                 </div>
-
-                {/* Pets Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2 flex items-center gap-2">
-                    <Dog size={16} /> Pets and Animals
-                  </h3>
-                  <p className="text-xs text-textbody/60 leading-relaxed">
-                    Please select the pet you have and the amount so we can provide supplies when on hand.
-                  </p>
-                  <div className="space-y-4">
-                    {['Dog', 'Cat', 'Small Animal (Rabbit, Hamster, etc)'].map((pet) => (
-                      <div key={pet} className="flex items-center justify-between gap-4 p-4 bg-white/5 border border-secondary/10 rounded-xl">
-                        <div className="flex items-center gap-2">
-                          <input 
-                            type="checkbox" 
-                            id={pet} 
-                            className="accent-secondary" 
-                            checked={formData.pets[pet] > 0}
-                            onChange={(e) => handlePetQty(pet, e.target.checked ? 1 : 0)}
-                          />
-                          <label htmlFor={pet} className="text-sm text-foreground">{pet}</label>
-                        </div>
-                        <input 
-                          type="number" 
-                          placeholder="Qty" 
-                          value={formData.pets[pet] || ''}
-                          onChange={(e) => handlePetQty(pet, e.target.value)}
-                          className="w-20 bg-white/10 border border-secondary/10 rounded px-3 py-1 text-sm outline-none focus:border-secondary text-foreground" 
-                        />
-                      </div>
-                    ))}
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Pet Details (Types, Ages, Special Needs)</label>
+                  <textarea id="PET_DETAILS" name="PET_DETAILS" rows={3} placeholder="Please provide more details about your pets..." className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"></textarea>
                 </div>
+              </div>
 
-                {/* Confirmation Section */}
-                <div className="space-y-6">
-                  <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Confirmation & Acknowledgment</h3>
-                  <div className="space-y-4">
-                    {[
-                      "I confirm that the information provided is accurate to the best of my knowledge.",
-                      "I understand that food, clothing and hygiene items are subject to availability.",
-                      "I agree to the storage of my data for the purpose of providing support services.",
-                      "I acknowledge that BFBOW authorized personnel will handle my information securely."
-                    ].map((agreement, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <input required type="checkbox" id={`agree-${i}`} className="mt-1 accent-secondary" />
-                        <label htmlFor={`agree-${i}`} className="text-xs text-textbody/60 leading-relaxed">{agreement}</label>
-                      </div>
-                    ))}
-                  </div>
+              {/* Additional Info Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Additional Information</h3>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Is there anything else we should know?</label>
+                  <textarea id="ADDITIONAL_INFO" name="ADDITIONAL_INFO" rows={4} placeholder="Any other details that might help us support you better..." className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground"></textarea>
                 </div>
+              </div>
 
-                <Button 
-                  disabled={status === 'loading'}
-                  className="w-full py-8 text-lg uppercase tracking-[0.2em] font-bold shadow-xl shadow-secondary/20 group bg-secondary text-white hover:bg-secondary/90 flex items-center justify-center transition-all"
-                >
-                  {status === 'loading' ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <>Submit My Form <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" /></>
-                  )}
-                </Button>
-                {status === 'error' && (
-                  <p className="text-destructive text-center text-sm font-bold mt-4">
-                    {errorMessage}
-                  </p>
-                )}
-              </form>
-            </div>
-          )}
+              {/* Confirmation Section */}
+              <div className="space-y-6">
+                <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Confirmation & Acknowledgment</h3>
+                <div className="space-y-4">
+                  {[
+                    "I confirm that the information provided is accurate to the best of my knowledge.",
+                    "I understand that food, clothing and hygiene items are subject to availability.",
+                    "I agree to the storage of my data for the purpose of providing support services.",
+                    "I acknowledge that BFBOW authorized personnel will handle my information securely."
+                  ].map((agreement, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <input required type="checkbox" id={`agree-${i}`} className="mt-1 accent-secondary" />
+                      <label htmlFor={`agree-${i}`} className="text-xs text-textbody/60 leading-relaxed">{agreement}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Button 
+                type="submit"
+                form="sib-form"
+                className="w-full py-8 text-lg uppercase tracking-[0.2em] font-bold shadow-xl shadow-secondary/20 group bg-secondary text-white hover:bg-secondary/90"
+              >
+                Submit My Form <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" />
+              </Button>
+
+              <input type="text" name="email_address_check" value="" className="hidden" />
+              <input type="hidden" name="locale" value="en" />
+              {/* Hidden fields for other Brevo attributes if needed */}
+              <input type="hidden" id="HYGIENE_PREFS" name="HYGIENE_PREFS" />
+            </form>
+          </div>
         </div>
       </section>
     </div>

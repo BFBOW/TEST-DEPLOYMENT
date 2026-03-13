@@ -57,7 +57,6 @@ export default function WhoWeArePage() {
               “The Need is Great, The Need is Real.”
             </h2>
             <p className="text-xl font-heading uppercase tracking-widest opacity-60 text-foreground">
-              — Marcia White - CBC News Toronto
             </p>
           </motion.div>
         </div>
@@ -89,7 +88,7 @@ export default function WhoWeArePage() {
                 ].map((milestone, i) => (
                   <div key={i} className="flex gap-6 items-start">
                     <div className="text-2xl font-heading text-secondary shrink-0">{milestone.year}</div>
-                    <div className="h-px bg-secondary/20 flex-grow mt-4" />
+                    <div className="h-px bg-slate/30 flex-grow mt-4" />
                     <p className="text-textbody/60 max-w-xs">{milestone.text}</p>
                   </div>
                 ))}
@@ -291,33 +290,39 @@ export default function WhoWeArePage() {
       </section>
 
       {/* Founding Team Section */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background border-t border-slate/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-sm uppercase tracking-[0.3em] font-bold text-secondary mb-4">The Founding Team</h3>
-            <h2 className="text-4xl font-heading text-foreground">Meet The Founding Team</h2>
+            <h3 className="text-sm uppercase tracking-[0.3em] font-bold text-secondary mb-4">Our Dedicated Team</h3>
+            <h2 className="text-4xl font-heading text-foreground">The Hearts Behind the Mission</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[1, 2, 3].map((item) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: item * 0.1 }}
-                className="group"
-              >
-                <div className="aspect-[3/4] bg-secondary/10 rounded-2xl mb-6 overflow-hidden relative border border-secondary/10">
-                  <div className="absolute inset-0 flex items-center justify-center text-secondary/20">
-                    <Users size={64} />
-                  </div>
-                </div>
-                <div className="h-8 w-48 bg-secondary/10 rounded mb-2" /> {/* Placeholder for name */}
-                <div className="h-4 w-32 bg-secondary/5 rounded" /> {/* Placeholder for title */}
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[21/9] group"
+          >
+            <img 
+              src="/fbow.jpg"
+              alt="The BFBOW Team"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              style={{ 
+                filter: 'sepia(0.1) saturate(1.5) contrast(1.25) brightness(1.05)',
+                objectPosition: 'center 10%',
+                transform: 'scale(1.6)',
+                imageRendering: 'crisp-edges'
+              }}
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-12">
+              <div className="max-w-2xl">
+                <p className="text-white/90 text-xl italic font-heading">
+                  "Serving our community with faith, dignity, and a shared commitment to ensuring no one goes hungry."
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
