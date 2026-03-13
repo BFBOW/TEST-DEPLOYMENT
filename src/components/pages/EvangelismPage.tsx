@@ -17,8 +17,16 @@ export default function EvangelismPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 bg-background border-b border-bordersubtle/10 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-secondary/5 -skew-x-12 translate-x-1/4" />
+      <section className="relative py-32 lg:py-48 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=1000"
+            alt="Community gathering"
+            className="w-full h-full object-cover opacity-40"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-background" />
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -111,8 +119,16 @@ export default function EvangelismPage() {
       </section>
 
       {/* Evangelism Signup */}
-      <section id="evangelism-signup" className="py-24 bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="evangelism-signup" className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop"
+            alt="Background"
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-heading mb-6">Start Your Journey</h2>
             <p className="text-textbody/80">Sign up to receive updates on upcoming Bible studies, evangelism projects, and training sessions.</p>

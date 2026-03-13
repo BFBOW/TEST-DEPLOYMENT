@@ -18,9 +18,15 @@ export default function JoinMissionPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 bg-background border-b border-bordersubtle/10 overflow-hidden">
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#8A9A5B_0%,transparent_50%)]" />
+      <section className="relative py-32 lg:py-48 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1559027615-cd26736f5d4b?q=80&w=2070&auto=format&fit=crop"
+            alt="Handshake and partnership"
+            className="w-full h-full object-cover opacity-40"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-background" />
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -30,8 +36,8 @@ export default function JoinMissionPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-5xl md:text-7xl font-heading mb-8 leading-tight text-foreground">
-                Partnerships That Make a <span className="text-secondary italic">Difference</span>.
+              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+                Partnerships That Make a <br /><span className="text-secondary italic">Difference</span>.
               </h1>
               <p className="text-xl text-textbody/70 leading-relaxed mb-10">
                 Your organization has the power to create meaningful change in our community. By partnering with the <span className="text-foreground font-semibold">Belleville Food Bank On Wheels</span>, you're not only fighting hunger but also supporting sustainable practices that uplift families and protect the planet.
@@ -157,9 +163,18 @@ export default function JoinMissionPage() {
       </section>
 
       {/* Ways to Partner */}
-      <section className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-heading mb-16 text-foreground">Ways to Partner</h2>
+      <section className="py-24 bg-primary text-primary-foreground overflow-hidden relative">
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop"
+            alt="Background"
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-heading mb-16 text-white">Ways to Partner</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               { title: "Sponsorships", desc: "Financial support for specific programs or events." },
@@ -167,11 +182,11 @@ export default function JoinMissionPage() {
               { title: "Volunteer Days", desc: "Team building through community service." }
             ].map((way, i) => (
               <div key={i} className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center text-secondary mb-6 border border-secondary/20">
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-secondary mb-6 border border-white/20">
                   <CheckCircle2 size={32} />
                 </div>
-                <h4 className="text-xl font-heading mb-4 text-foreground">{way.title}</h4>
-                <p className="text-textlight text-sm max-w-xs">{way.desc}</p>
+                <h4 className="text-xl font-heading mb-4 text-white">{way.title}</h4>
+                <p className="text-white/60 text-sm max-w-xs">{way.desc}</p>
               </div>
             ))}
           </div>

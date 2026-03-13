@@ -130,14 +130,24 @@ export default function FindSupportPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 bg-background border-b border-bordersubtle/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-32 lg:py-48 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop"
+            alt="Hands reaching out"
+            className="w-full h-full object-cover opacity-40"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-background" />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h1 className="text-5xl md:text-7xl font-heading mb-8 text-foreground">Help When You <span className="text-secondary italic">Need</span> It</h1>
+              <h1 className="text-6xl md:text-8xl font-heading mb-8 text-foreground leading-[0.9]">Help When You <br /><span className="text-secondary italic">Need</span> It</h1>
               <p className="text-xl text-textbody/70 leading-relaxed mb-6">
                 At the Belleville Food Bank On Wheels, we understand that everyone faces challenges. 
               </p>
@@ -218,11 +228,20 @@ export default function FindSupportPage() {
       </section>
 
       {/* Access Support Today Info */}
-      <section className="py-24 bg-primary text-primary-foreground">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1593113630400-ea4288922497?q=80&w=2070&auto=format&fit=crop"
+            alt="Background"
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-7xl font-heading mb-8 opacity-20 uppercase tracking-[0.3em]">Access Support Today</h2>
-            <p className="text-xl text-textbody/80 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/90 max-w-4xl mx-auto leading-relaxed">
               We're thrilled to support you and your family's needs with our bi-weekly healthy food boxes. Each box is filled with nourishing items, including local produce, meats, toiletries, diet-friendly meals, and even pet food.
             </p>
           </div>
@@ -232,8 +251,8 @@ export default function FindSupportPage() {
               <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-secondary">
                 <Heart size={24} />
               </div>
-              <h3 className="text-2xl font-heading">Compassionate Care</h3>
-              <p className="text-textbody/60 text-sm leading-relaxed">
+              <h3 className="text-2xl font-heading text-white">Compassionate Care</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
                 At our food bank, we're here to help anyone in need who has been referred to us. Our clients come from various backgrounds, such as schools, social services, survivors of domestic violence, the homeless, and the unemployed.
               </p>
             </div>
@@ -241,8 +260,8 @@ export default function FindSupportPage() {
               <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-secondary">
                 <ShieldCheck size={24} />
               </div>
-              <h3 className="text-2xl font-heading">Dietary Respect</h3>
-              <p className="text-textbody/60 text-sm leading-relaxed">
+              <h3 className="text-2xl font-heading text-white">Dietary Respect</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
                 We understand the importance of individual dietary restrictions and respect cultural and social dietary requirements. We offer gluten-free, diabetic-friendly, nut-free, vegan, vegetarian, and halal options.
               </p>
             </div>
@@ -250,8 +269,8 @@ export default function FindSupportPage() {
               <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-secondary">
                 <Info size={24} />
               </div>
-              <h3 className="text-2xl font-heading">Secure & Private</h3>
-              <p className="text-textbody/60 text-sm leading-relaxed">
+              <h3 className="text-2xl font-heading text-white">Secure & Private</h3>
+              <p className="text-white/60 text-sm leading-relaxed">
                 Rest assured that any information you provide will be kept safe and secure, accessible only to authorized senior personnel at BFBOW.
               </p>
             </div>
@@ -476,8 +495,8 @@ export default function FindSupportPage() {
                 Submit My Form <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" />
               </Button>
 
-              <input type="text" name="email_address_check" value="" className="hidden" />
-              <input type="hidden" name="locale" value="en" />
+              <input type="text" name="email_address_check" value="" className="hidden" readOnly />
+              <input type="hidden" name="locale" value="en" readOnly />
               {/* Hidden fields for other Brevo attributes if needed */}
               <input type="hidden" id="HYGIENE_PREFS" name="HYGIENE_PREFS" />
             </form>

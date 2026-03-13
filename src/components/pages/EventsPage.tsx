@@ -29,26 +29,39 @@ export default function EventsPage() {
   ];
 
   return (
-    <div className="py-24 bg-background min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-heading mb-6 text-foreground"
-          >
-            Upcoming Events
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl text-textbody/70 max-w-2xl mx-auto"
-          >
-            Join us for our community events, food distribution programs, and special gatherings.
-          </motion.p>
+    <div className="bg-background min-h-screen">
+      {/* Hero Section */}
+      <section className="relative py-32 lg:py-48 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1506784919141-1750400da747?q=80&w=2068&auto=format&fit=crop"
+            alt="Calendar and planning"
+            className="w-full h-full object-cover opacity-40"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-background" />
         </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+                Community <br />
+                <span className="text-secondary italic">Gatherings</span>
+              </h1>
+              <p className="text-xl text-textbody/70 leading-relaxed max-w-2xl mx-auto">
+                Join us for our community events, food distribution programs, and special gatherings. Every event is an opportunity to grow together.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
+      <div className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8">
           {events.map((event, i) => (
             <motion.div
