@@ -37,14 +37,14 @@ export default function DonatePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+              <h1 className="text-7xl md:text-9xl font-heading mb-8 leading-[0.9] text-foreground drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
                 Give Today, <br />
                 <span className="text-secondary italic">Change</span> Tomorrow.
               </h1>
-              <p className="text-xl text-textbody/70 leading-relaxed mb-8">
+              <p className="text-2xl text-textbody/90 leading-relaxed mb-8 drop-shadow-md">
                 Every dollar you give helps us provide nutritious meals and essential support to families in need. Monetary donations allow us to respond quickly to community needs, source fresh produce, and expand our programs to reach more people.
               </p>
-              <p className="text-lg text-textbody/50 italic mb-10">
+              <p className="text-xl text-textbody/70 italic mb-10 drop-shadow-sm">
                 With your generosity, we can turn hunger into hope.
               </p>
               <Button 

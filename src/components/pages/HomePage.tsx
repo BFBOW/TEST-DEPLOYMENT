@@ -118,12 +118,12 @@ export default function HomePage() {
               <span className="font-bold-body text-sm uppercase tracking-[0.2em] text-secondary">Belleville Food Bank On Wheels</span>
             </div>
             
-            <h1 className="font-bold-heading text-6xl md:text-7xl lg:text-8xl text-primary-foreground leading-[0.95] mb-8">
+            <h1 className="font-bold-heading text-7xl md:text-8xl lg:text-9xl text-primary-foreground leading-[0.95] mb-8 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
               Nourishing <br />
               <span className="text-secondary italic">Body</span> & Soul
             </h1>
             
-            <p className="font-bold-body text-lg text-textbody/80 leading-relaxed mb-12 max-w-md">
+            <p className="font-bold-body text-xl md:text-2xl text-textbody/90 leading-relaxed mb-12 max-w-xl drop-shadow-md">
               A sanctuary where faith meets action. We provide essential sustenance, spiritual growth, and a compassionate community for all who seek it.
             </p>
 
@@ -209,7 +209,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="font-bold-heading text-4xl md:text-5xl text-foreground mb-8 leading-tight">
+                  <h2 className="font-bold-heading text-4xl md:text-5xl text-foreground mb-8 leading-tight drop-shadow-lg">
                     Serving the <br />
                     <span className="text-secondary">Whole Person</span>
                   </h2>

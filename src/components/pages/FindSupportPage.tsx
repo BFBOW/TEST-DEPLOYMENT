@@ -14,9 +14,11 @@ import {
   MapPin,
   Info,
   Dog,
-  UserPlus
+  UserPlus,
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '../ui/button';
+import type { SupportFormSubmission, SupportPetSelection } from '../../lib/supportSubmission';
 
 interface FAQItemProps {
   question: string;
@@ -54,34 +56,85 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 };
 
 export default function FindSupportPage() {
+  const [postalCode, setPostalCode] = useState('');
+  const [postalCodeError, setPostalCodeError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toUpperCase();
+    setPostalCode(value);
+    const regex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
+    if (value && !regex.test(value)) {
+      setPostalCodeError('Invalid Canadian postal code format (e.g. K8N 1A1)');
+    } else {
+      setPostalCodeError('');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    
+    const pets: SupportPetSelection[] = ['Dog', 'Cat', 'Small Animal (Rabbit, Hamster, etc)'].map(pet => ({
+      name: pet,
+      quantity: Number(formData.get(`PET_QTY_${pet}`) || 0)
+    }));
+
+    const submission: SupportFormSubmission = {
+      firstName: formData.get('FIRSTNAME') as string,
+      lastName: formData.get('LASTNAME') as string,
+      email: formData.get('EMAIL') as string,
+      phone: `${formData.get('SMS__COUNTRY_CODE')}${formData.get('SMS')}`,
+      postalCode: formData.get('POSTAL_CODE') as string,
+      ageRanges: Array.from(formData.getAll('AGE_RANGES')) as string[],
+      optIn: formData.get('OPT_IN') === 'true',
+      pickupOthers: formData.get('PICKUP_OTHERS') as string,
+      householdCount: Number(formData.get('HOUSEHOLD_COUNT') || 0),
+      dietaryPrefs: Array.from(formData.getAll('DIETARY_PREFS')) as string[],
+      dietaryNotes: formData.get('DIETARY_NOTES') as string,
+      hygienePrefs: Array.from(formData.getAll('HYGIENE_PREFS')) as string[],
+      hygieneNeeds: formData.get('HYGIENE_NEEDS') as string,
+      pets,
+      petDetails: formData.get('PET_DETAILS') as string,
+      additionalInfo: formData.get('ADDITIONAL_INFO') as string,
+      confirmations: Array.from(formData.getAll('CONFIRM_ACK')) as string[],
+      contactTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    };
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submission),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong');
+      }
+
+      setSubmitSuccess(true);
+      (e.target as HTMLFormElement).reset();
+      setPostalCode('');
+      document.getElementById('support-form')?.scrollIntoView({ behavior: 'smooth' });
+    } catch (error: any) {
+      setSubmitError(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   React.useEffect(() => {
-    // Brevo Configuration
-    (window as any).REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
-    (window as any).LOCALE = 'en';
-    (window as any).EMAIL_INVALID_MESSAGE = (window as any).SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
-    (window as any).REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
-    (window as any).GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
-    (window as any).INVALID_NUMBER = "The information provided is invalid. Please review the field format and try again.";
-    (window as any).translation = {
-      common: {
-        selectedList: '{quantity} list selected',
-        selectedLists: '{quantity} lists selected',
-        selectedOption: '{quantity} selected',
-        selectedOptions: '{quantity} selected',
-      }
-    };
-
-    const script = document.createElement('script');
-    script.src = "https://sibforms.com/forms/end-form/build/main.js";
-    script.defer = true;
-    document.body.appendChild(script);
-
-    return () => {
-      const existingScript = document.querySelector('script[src="https://sibforms.com/forms/end-form/build/main.js"]');
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-    };
+    // Brevo Configuration removed as we are using server-side API
   }, []);
 
   const faqs = [
@@ -130,15 +183,15 @@ export default function FindSupportPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-32 lg:py-48 overflow-hidden">
+      <section className="relative py-32 lg:py-48 bg-background border-b border-bordersubtle/10 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop"
             alt="Hands reaching out"
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover opacity-10 grayscale"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-background" />
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -228,15 +281,8 @@ export default function FindSupportPage() {
       </section>
 
       {/* Access Support Today Info */}
-      <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <img 
-            src="https://images.unsplash.com/photo-1593113630400-ea4288922497?q=80&w=2070&auto=format&fit=crop"
-            alt="Background"
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-        </div>
+      <section className="py-24 bg-primary text-primary-foreground overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-white/5 -skew-x-12 translate-x-1/4" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
@@ -282,35 +328,19 @@ export default function FindSupportPage() {
       <section id="support-form" className="py-24 bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-secondary/5 border border-secondary/10 rounded-3xl p-8 md:p-16 shadow-xl">
-            <div className="text-center mb-16">
-              <UserPlus className="mx-auto mb-6 text-secondary" size={64} />
-              <h2 className="text-4xl font-heading mb-4 text-foreground">Signing Up</h2>
-              <p className="text-textbody/60">
-                Please fill out your membership application form to get started. Once submitted, a member of our Belleville Food Bank On Wheels team will review your information and reach out shortly!
-              </p>
-            </div>
-
-            <div id="error-message" className="sib-form-message-panel hidden mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive text-destructive text-sm">
-              <div className="flex items-center gap-3">
-                <Info size={20} />
-                <span>Your submission could not be saved. Please try again.</span>
+              <div className="text-center mb-16">
+                <UserPlus className="mx-auto mb-6 text-secondary" size={64} />
+                <h2 className="text-4xl font-heading mb-4 text-foreground">Signing Up</h2>
+                <p className="text-textbody/60">
+                  Please fill out your membership application form to get started. Once submitted, a member of our Belleville Food Bank On Wheels team will review your information and reach out shortly!
+                </p>
               </div>
-            </div>
 
-            <div id="success-message" className="sib-form-message-panel hidden mb-6 p-4 rounded-lg bg-secondary/10 border border-secondary text-secondary text-sm">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 size={20} />
-                <span>Your submission has been successful.</span>
-              </div>
-            </div>
-
-            <form 
-              id="sib-form" 
-              method="POST" 
-              action="https://c7bb5e5e.sibforms.com/serve/MUIFACM91r-wF92NVX4-ZRCXCaAvB1RLge7kGqHQDFhD2_hZORtudWorSIHFAVkPLeRhrRTqLyzB87rPmM-kUDZOzz-NANoBD1ATkLJfCQBh2S_4gh7lv6WjwwYs4qa-Mf2V0x68KvY87Ul9diQub3siO3F_r0E-HdplHTlrSUHMByueYbC6Ha4Bu2MzawS4rmgHeLJbsMNJzUfBVA==" 
-              data-type="subscription"
-              className="space-y-10"
-            >
+              <form 
+                id="sib-form" 
+                onSubmit={handleSubmit}
+                className="space-y-10"
+              >
               {/* Name Section */}
               <div className="space-y-6">
                 <h3 className="text-sm uppercase tracking-widest font-bold text-secondary border-b border-secondary/20 pb-2">Name</h3>
@@ -325,10 +355,6 @@ export default function FindSupportPage() {
                     <input required type="text" id="LASTNAME" name="LASTNAME" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-widest font-bold text-foreground">Date of Birth <span className="text-destructive">*</span></label>
-                  <input required type="date" id="DOB" name="DOB" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground [color-scheme:dark]" />
-                </div>
               </div>
 
               {/* Age Range Section */}
@@ -340,7 +366,13 @@ export default function FindSupportPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {['0-18', '19-30', '31-50', '51-64', '65+'].map((range) => (
                     <div key={range} className="flex items-center gap-2">
-                      <input type="checkbox" id={`age-${range}`} className="accent-secondary" />
+                      <input 
+                        type="checkbox" 
+                        id={`age-${range}`}
+                        name="AGE_RANGES" 
+                        value={range} 
+                        className="accent-secondary"
+                      />
                       <label htmlFor={`age-${range}`} className="text-xs text-textbody/60">{range}</label>
                     </div>
                   ))}
@@ -354,8 +386,14 @@ export default function FindSupportPage() {
                   <div className="space-y-2">
                     <label className="text-xs uppercase tracking-widest font-bold text-foreground">Email <span className="text-destructive">*</span></label>
                     <input required type="email" id="EMAIL" name="EMAIL" placeholder="jane.doe@email.com" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors text-foreground" />
-                    <div className="flex items-center gap-2 mt-2">
-                      <input type="checkbox" id="news" className="accent-secondary" />
+                  <div className="flex items-center gap-2 mt-2">
+                      <input 
+                        type="checkbox" 
+                        id="news"
+                        name="OPT_IN" 
+                        value="true" 
+                        className="accent-secondary" 
+                      />
                       <label htmlFor="news" className="text-xs text-textbody/60">Sign up for news and updates</label>
                     </div>
                   </div>
@@ -373,7 +411,17 @@ export default function FindSupportPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs uppercase tracking-widest font-bold text-foreground">Postal Code <span className="text-destructive">*</span></label>
-                      <input required type="text" id="POSTAL_CODE" name="POSTAL_CODE" placeholder="L1E1V8" className="w-full bg-white/5 border border-secondary/10 rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors uppercase text-foreground" />
+                      <input 
+                        required 
+                        type="text" 
+                        id="POSTAL_CODE" 
+                        name="POSTAL_CODE" 
+                        placeholder="L1E1V8" 
+                        value={postalCode}
+                        onChange={handlePostalCodeChange}
+                        className={`w-full bg-white/5 border ${postalCodeError ? 'border-destructive' : 'border-secondary/10'} rounded-lg px-4 py-3 focus:border-secondary outline-none transition-colors uppercase text-foreground`} 
+                      />
+                      {postalCodeError && <p className="text-[10px] text-destructive mt-1">{postalCodeError}</p>}
                     </div>
                   </div>
                 </div>
@@ -407,8 +455,14 @@ export default function FindSupportPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {['Gluten-Free', 'Diabetic-Friendly', 'Nut-Free', 'Vegan', 'Vegetarian', 'Halal', 'Hypertension', 'Celiac', 'No Restrictions'].map((diet) => (
                     <div key={diet} className="flex items-center gap-2">
-                      <input type="checkbox" id={diet} className="accent-secondary" />
-                      <label htmlFor={diet} className="text-xs text-textbody/60">{diet}</label>
+                      <input 
+                        type="checkbox" 
+                        id={`diet-${diet.replace(/\s+/g, '-')}`}
+                        name="DIETARY_PREFS" 
+                        value={diet} 
+                        className="accent-secondary" 
+                      />
+                      <label htmlFor={`diet-${diet.replace(/\s+/g, '-')}`} className="text-xs text-textbody/60">{diet}</label>
                     </div>
                   ))}
                 </div>
@@ -424,8 +478,14 @@ export default function FindSupportPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {['Soap/Body Wash', 'Shampoo', 'Toothpaste', 'Deodorant', 'Feminine Hygiene', 'Diapers', 'Baby Wipes', 'Clothing Items'].map((item) => (
                     <div key={item} className="flex items-center gap-2">
-                      <input type="checkbox" id={item} className="accent-secondary" />
-                      <label htmlFor={item} className="text-xs text-textbody/60">{item}</label>
+                      <input 
+                        type="checkbox" 
+                        id={`hygiene-${item.replace(/\s+/g, '-')}`}
+                        name="HYGIENE_PREFS" 
+                        value={item} 
+                        className="accent-secondary" 
+                      />
+                      <label htmlFor={`hygiene-${item.replace(/\s+/g, '-')}`} className="text-xs text-textbody/60">{item}</label>
                     </div>
                   ))}
                 </div>
@@ -447,10 +507,26 @@ export default function FindSupportPage() {
                   {['Dog', 'Cat', 'Small Animal (Rabbit, Hamster, etc)'].map((pet) => (
                     <div key={pet} className="flex items-center justify-between gap-4 p-4 bg-white/5 border border-secondary/10 rounded-xl">
                       <div className="flex items-center gap-2">
-                        <input type="checkbox" id={pet} className="accent-secondary" />
-                        <label htmlFor={pet} className="text-sm text-foreground">{pet}</label>
+                        <input 
+                          type="checkbox" 
+                          id={`pet-${pet.replace(/\s+/g, '-')}`}
+                          name="PET_INFO" 
+                          value={pet} 
+                          className="accent-secondary" 
+                        />
+                        <label htmlFor={`pet-${pet.replace(/\s+/g, '-')}`} className="text-sm text-foreground">{pet}</label>
                       </div>
-                      <input type="number" placeholder="Qty" className="w-20 bg-white/10 border border-secondary/10 rounded px-3 py-1 text-sm outline-none focus:border-secondary text-foreground" />
+                      <div className="flex items-center gap-2">
+                        <label htmlFor={`qty-${pet}`} className="text-xs text-textbody/60">Qty:</label>
+                        <input 
+                          type="number" 
+                          id={`qty-${pet}`}
+                          name={`PET_QTY_${pet}`}
+                          min="0"
+                          defaultValue="0"
+                          className="w-16 bg-white/10 border border-secondary/20 rounded px-2 py-1 text-sm outline-none focus:border-secondary"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -480,26 +556,47 @@ export default function FindSupportPage() {
                     "I acknowledge that BFBOW authorized personnel will handle my information securely."
                   ].map((agreement, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <input required type="checkbox" id={`agree-${i}`} className="mt-1 accent-secondary" />
+                      <input 
+                        required 
+                        type="checkbox" 
+                        id={`agree-${i}`} 
+                        name="CONFIRM_ACK"
+                        value={agreement}
+                        className="mt-1 accent-secondary" 
+                      />
                       <label htmlFor={`agree-${i}`} className="text-xs text-textbody/60 leading-relaxed">{agreement}</label>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <Button 
-                type="submit"
-                form="sib-form"
-                className="w-full py-8 text-lg uppercase tracking-[0.2em] font-bold shadow-xl shadow-secondary/20 group bg-secondary text-white hover:bg-secondary/90"
-              >
-                Submit My Form <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" />
-              </Button>
+                <Button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-8 text-lg uppercase tracking-[0.2em] font-bold shadow-xl shadow-secondary/20 group bg-secondary text-white hover:bg-secondary/90 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit My Form'} 
+                  {!isSubmitting && <CheckCircle2 className="ml-2 group-hover:scale-110 transition-transform" />}
+                </Button>
 
-              <input type="text" name="email_address_check" value="" className="hidden" readOnly />
-              <input type="hidden" name="locale" value="en" readOnly />
-              {/* Hidden fields for other Brevo attributes if needed */}
-              <input type="hidden" id="HYGIENE_PREFS" name="HYGIENE_PREFS" />
-            </form>
+                {submitError && (
+                  <div className="mt-6 p-4 rounded-lg bg-destructive/10 border border-destructive text-destructive text-sm">
+                    <div className="flex items-center gap-3">
+                      <AlertCircle size={20} />
+                      <span>{submitError}</span>
+                    </div>
+                  </div>
+                )}
+
+                {submitSuccess && (
+                  <div className="mt-6 p-4 rounded-lg bg-secondary/10 border border-secondary text-secondary text-sm">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle2 size={20} />
+                      <span>Your support application has been submitted successfully.</span>
+                    </div>
+                  </div>
+                )}
+              </form>
           </div>
         </div>
       </section>

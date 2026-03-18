@@ -38,14 +38,14 @@ export default function WhoWeArePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+              <h1 className="text-7xl md:text-9xl font-heading mb-8 leading-[0.9] text-foreground drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
                 Guided by Faith, <br />
                 <span className="text-secondary italic">Nourishing</span> with Love
               </h1>
-              <p className="text-xl text-textbody/70 leading-relaxed mb-10">
+              <p className="text-2xl text-textbody/90 leading-relaxed mb-10 drop-shadow-md">
                 The Belleville Food Bank On Wheels began as an act of faith, a response to the growing need in our community. Inspired by Hebrews 13:1—“Let brotherly love continue”—our mission has always been about more than food. It’s about restoring dignity, offering hope, and sharing God’s love with everyone who walks through our doors.
               </p>
-              <p className="text-lg text-textbody/50 max-w-2xl mx-auto">
+              <p className="text-xl text-textbody/70 max-w-3xl mx-auto drop-shadow-sm">
                 What started as a small outreach has grown into a lifeline for thousands, serving over 3,000 families monthly across Belleville and the GTA. Through God’s grace and the kindness of volunteers, donors, and partners, we’ve become a beacon of hope for those in need.
               </p>
             </motion.div>

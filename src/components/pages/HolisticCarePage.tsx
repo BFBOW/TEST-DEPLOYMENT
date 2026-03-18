@@ -36,8 +36,8 @@ export default function HolisticCarePage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <span className="inline-block font-heading text-secondary text-xl mb-4 uppercase tracking-[0.3em]">Spiritual Support</span>
-              <h1 className="text-5xl md:text-7xl font-heading mb-8 leading-tight">Holistic Care & <span className="text-secondary italic">Visitation</span></h1>
-              <p className="text-xl text-textbody/80 leading-relaxed mb-10">
+              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">Holistic Care & <span className="text-secondary italic">Visitation</span></h1>
+              <p className="text-2xl text-textbody/90 leading-relaxed mb-10 drop-shadow-md">
                 Healing the whole person through faith-based counseling, compassionate presence, and dedicated visitation for those who cannot come to us.
               </p>
               <Button 

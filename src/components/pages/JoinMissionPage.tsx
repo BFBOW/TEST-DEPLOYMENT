@@ -36,13 +36,13 @@ export default function JoinMissionPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+              <h1 className="text-7xl md:text-9xl font-heading mb-8 leading-[0.9] text-foreground drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
                 Partnerships That Make a <br /><span className="text-secondary italic">Difference</span>.
               </h1>
-              <p className="text-xl text-textbody/70 leading-relaxed mb-10">
+              <p className="text-2xl text-textbody/90 leading-relaxed mb-10 drop-shadow-md">
                 Your organization has the power to create meaningful change in our community. By partnering with the <span className="text-foreground font-semibold">Belleville Food Bank On Wheels</span>, you're not only fighting hunger but also supporting sustainable practices that uplift families and protect the planet.
               </p>
-              <p className="text-lg text-textbody/50 leading-relaxed mb-12">
+              <p className="text-xl text-textbody/70 leading-relaxed mb-12 drop-shadow-sm">
                 Together, we can rescue surplus food, distribute meals, and bring hope to thousands of lives each week. Your partnership strengthens the foundation of a healthier, more compassionate community, ensuring that no one is left behind.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -124,7 +124,7 @@ export default function JoinMissionPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl font-heading mb-8 text-foreground">Partners Making An Impact</h2>
+              <h2 className="text-4xl font-heading mb-8 text-foreground drop-shadow-lg">Partners Making An Impact</h2>
               <p className="text-lg text-textbody/70 leading-relaxed mb-8">
                 The <span className="text-foreground font-semibold">Belleville Food Bank On Wheels</span> is proud to collaborate with businesses and organizations that share our vision of a hunger-free community. Together, we've accomplished incredible milestones.
               </p>

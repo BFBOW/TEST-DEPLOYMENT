@@ -35,8 +35,8 @@ export default function EvangelismPage() {
               animate={{ opacity: 1, x: 0 }}
             >
               <span className="inline-block font-heading text-secondary text-xl mb-4 uppercase tracking-[0.3em]">Join the Mission</span>
-              <h1 className="text-5xl md:text-7xl font-heading mb-8 leading-tight">Community <br /><span className="text-secondary italic">Evangelism</span></h1>
-              <p className="text-xl text-textbody/70 leading-relaxed mb-10">
+              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">Community <br /><span className="text-secondary italic">Evangelism</span></h1>
+              <p className="text-2xl text-textbody/90 leading-relaxed mb-10 drop-shadow-md">
                 Spreading the Word through action, study, and community projects. Join us as we share the message of hope and faith across Belleville.
               </p>
               <div className="flex flex-wrap gap-6">

@@ -52,11 +52,11 @@ const Spirit: React.FC = () => {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <Leaf className="w-12 h-12 text-secondary mx-auto mb-8 animate-pulse" />
-            <h1 className="font-bold-heading text-7xl md:text-8xl lg:text-9xl text-primary-foreground leading-[0.85] mb-8 uppercase tracking-tighter">
+            <h1 className="font-bold-heading text-8xl md:text-9xl lg:text-[10rem] text-primary-foreground leading-[0.85] mb-8 uppercase tracking-tighter drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
               Food for the <br />
               <span className="text-secondary italic font-normal">Spirit</span>
             </h1>
-            <p className="font-bold-body text-xl md:text-2xl text-textbody/80 max-w-2xl mx-auto leading-relaxed italic">
+            <p className="font-bold-body text-2xl md:text-3xl text-textbody/90 max-w-3xl mx-auto leading-relaxed italic drop-shadow-md">
               "Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God."
               <span className="block mt-4 text-sm not-italic uppercase tracking-widest">— Matthew 4:4</span>
             </p>
@@ -107,7 +107,7 @@ const Spirit: React.FC = () => {
                   <span className="text-secondary font-bold tracking-[0.3em] uppercase text-sm">AI Ministry</span>
                   <div className="h-px flex-grow bg-secondary/20" />
                 </div>
-                <h2 className="font-bold-heading text-5xl md:text-6xl text-foreground mb-8">
+                <h2 className="font-bold-heading text-5xl md:text-6xl text-foreground mb-8 drop-shadow-lg">
                   A Word for <br />
                   <span className="text-secondary italic">Your Season</span>
                 </h2>

@@ -1,50 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Open+Sans:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
-@import url("https://sibforms.com/forms/end-form/build/sib-styles.css");
-
-/* Brevo Form Font Overrides */
-@font-face {
-  font-display: block;
-  font-family: Roboto;
-  src: url(https://assets.brevo.com/font/Roboto/Latin/normal/normal/7529907e9eaf8ebb5220c5f9850e3811.woff2) format("woff2"), url(https://assets.brevo.com/font/Roboto/Latin/normal/normal/25c678feafdc175a70922a116c9be3e7.woff) format("woff")
-}
-
-@font-face {
-  font-display: fallback;
-  font-family: Roboto;
-  font-weight: 600;
-  src: url(https://assets.brevo.com/font/Roboto/Latin/medium/normal/6e9caeeafb1f3491be3e32744bc30440.woff2) format("woff2"), url(https://assets.brevo.com/font/Roboto/Latin/medium/normal/71501f0d8d5aa95960f6475d5487d4c2.woff) format("woff")
-}
-
-@font-face {
-  font-display: fallback;
-  font-family: Roboto;
-  font-weight: 700;
-  src: url(https://assets.brevo.com/font/Roboto/Latin/bold/normal/3ef7cf158f310cf752d5ad08cd0e7e60.woff2) format("woff2"), url(https://assets.brevo.com/font/Roboto/Latin/bold/normal/ece3a1d82f18b60bcce0211725c476aa.woff) format("woff")
-}
-
-#sib-container input:-ms-input-placeholder {
-  text-align: left;
-  font-family: Helvetica, sans-serif;
-  color: #c0ccda;
-}
-
-#sib-container input::placeholder {
-  text-align: left;
-  font-family: Helvetica, sans-serif;
-  color: #c0ccda;
-}
-
-#sib-container textarea::placeholder {
-  text-align: left;
-  font-family: Helvetica, sans-serif;
-  color: #c0ccda;
-}
-
-#sib-container a {
-  text-decoration: underline;
-  color: #2BB2FC;
-}
 
 /* Ensure Brevo hidden fields stay hidden */
 .input--hidden {
@@ -90,9 +45,15 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-paragraph;
+    @apply bg-background text-foreground font-paragraph text-xl;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    @apply font-heading tracking-tight drop-shadow-md;
+  }
+  h1 {
+    @apply font-black;
+  }
+  h2 {
+    @apply font-bold;
   }
 }

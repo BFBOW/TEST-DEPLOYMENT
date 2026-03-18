@@ -49,11 +49,11 @@ export default function EventsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-6xl md:text-8xl font-heading mb-8 leading-[0.9] text-foreground">
+              <h1 className="text-7xl md:text-9xl font-heading mb-8 leading-[0.9] text-foreground drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
                 Community <br />
                 <span className="text-secondary italic">Gatherings</span>
               </h1>
-              <p className="text-xl text-textbody/70 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-2xl text-textbody/90 leading-relaxed max-w-3xl mx-auto drop-shadow-md">
                 Join us for our community events, food distribution programs, and special gatherings. Every event is an opportunity to grow together.
               </p>
             </motion.div>
