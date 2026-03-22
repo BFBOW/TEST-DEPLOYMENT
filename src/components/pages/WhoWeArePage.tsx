@@ -319,18 +319,12 @@ export default function WhoWeArePage() {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[21/9] group"
+            className="relative rounded-3xl overflow-hidden shadow-2xl aspect-video"
           >
             <img 
               src="/fbow.jpg"
               alt="The BFBOW Team"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              style={{ 
-                filter: 'sepia(0.1) saturate(1.5) contrast(1.25) brightness(1.05)',
-                objectPosition: 'center 10%',
-                transform: 'scale(1.6)',
-                imageRendering: 'crisp-edges'
-              }}
+              className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-12">
