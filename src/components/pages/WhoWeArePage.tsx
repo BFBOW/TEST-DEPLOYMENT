@@ -322,7 +322,7 @@ export default function WhoWeArePage() {
             className="relative rounded-3xl overflow-hidden shadow-2xl aspect-video"
           >
             <img 
-              src="/fbow.jpg"
+              src="/fbow.jpg?v=2"
               alt="The BFBOW Team"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
